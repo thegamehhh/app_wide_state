@@ -1,4 +1,5 @@
 import 'package:app_wide_state/providers/favorites_provider.dart';
+import 'package:app_wide_state/providers/filters_provider.dart';
 import 'package:flutter/material.dart';
 
 import 'package:app_wide_state/models/meal.dart';
@@ -14,6 +15,8 @@ class MealDetailScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final favoriteMeals = ref.watch(favoriteMealsProvider);
+    final isFavorite = favoriteMeals.contains(meal);
     return Scaffold(
         appBar: AppBar(
           title: Text(meal.title),
@@ -32,7 +35,9 @@ class MealDetailScreen extends ConsumerWidget {
                         seconds: 4), //default 4 seconds no need to add
                   ));
                 },
-                icon: const Icon(Icons.favorite_border_rounded))
+                icon: Icon(isFavorite
+                    ? Icons.favorite
+                    : Icons.favorite_border_rounded))
           ],
         ),
         body: SingleChildScrollView(
