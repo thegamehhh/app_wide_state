@@ -22,32 +22,43 @@ class MealDetailScreen extends ConsumerWidget {
           title: Text(meal.title),
           actions: [
             IconButton(
-                onPressed: () {
-                  final isAdded = ref
-                      .read(favoriteMealsProvider.notifier)
-                      .toggleMealsFavoriteStatus(meal);
-                  ScaffoldMessenger.of(context).clearSnackBars();
-                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                    content: Text(isAdded
-                        ? 'Meal added as favorite'
-                        : 'Meal removed as favorite'),
-                    duration: const Duration(
-                        seconds: 4), //default 4 seconds no need to add
-                  ));
-                },
-                icon: Icon(isFavorite
-                    ? Icons.favorite
-                    : Icons.favorite_border_rounded))
+              onPressed: () {
+                final isAdded = ref
+                    .read(favoriteMealsProvider.notifier)
+                    .toggleMealsFavoriteStatus(meal);
+                ScaffoldMessenger.of(context).clearSnackBars();
+                ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                  content: Text(isAdded
+                      ? 'Meal added as favorite'
+                      : 'Meal removed as favorite'),
+                  duration: const Duration(
+                      seconds: 4), //default 4 seconds no need to add
+                ));
+              },
+              icon: AnimatedSwitcher(
+                  duration: const Duration(milliseconds: 300),
+                  transitionBuilder: (child, animation) => RotationTransition(
+                        turns: Tween(begin: 0.8, end: 1.0).animate(animation),
+                        child: child,
+                      ),
+                  child: Icon(
+                    isFavorite ? Icons.favorite : Icons.favorite_border_rounded,
+                    key: ValueKey(isFavorite),
+                  )),
+            ),
           ],
         ),
         body: SingleChildScrollView(
           child: Column(
             children: [
-              Image.network(
-                meal.imageUrl,
-                height: 300,
-                width: double.infinity,
-                fit: BoxFit.cover,
+              Hero(
+                tag: meal.id,
+                child: Image.network(
+                  meal.imageUrl,
+                  height: 300,
+                  width: double.infinity,
+                  fit: BoxFit.cover,
+                ),
               ),
               const SizedBox(height: 14),
               Text(
